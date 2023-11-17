@@ -50,7 +50,7 @@ function fetchEpg(url: string): Promise<IEpgResponse> {
 
       response.on('end', () => {
         try {
-          console.debug('data', data);
+          // console.debug('data', data);
           const jsonData: IEpgResponse = JSON.parse(data);
           resolve(jsonData);
         } catch (parseError) {
@@ -73,7 +73,6 @@ if (options.days) {
     try {
       const url = API_EPG_URL;
       const jsonData = await fetchEpg(url);
-      console.log('jsonData', jsonData);
       const templateContent = fs.readFileSync('./template.ejs', 'utf8');
       const epgXml = ejs.render(templateContent, jsonData);
 
