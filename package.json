@@ -1,0 +1,44 @@
+{
+  "name": "jtvepggen",
+  "version": "0.0.1",
+  "description": "JTVEpgGen is a command-line application that generates epg.xml.gz from J TV API",
+  "main": "index.ts",
+  "scripts": {
+    "start": "npx -y ts-node index.ts",
+    "build": "npx pkg -t linux,macos,win . --out-path dist",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rrjanbiah/JTVEpgGen.git"
+  },
+  "keywords": [
+    "epg"
+  ],
+  "author": "rrjanbiah",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rrjanbiah/JTVEpgGen/issues"
+  },
+  "homepage": "https://github.com/rrjanbiah/JTVEpgGen#readme",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "ejs": "^3.1.9",
+    "figlet": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.8",
+    "@types/node": "^20.9.1",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
+    "eslint": "^8.53.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.1.0"
+  }
+}
