@@ -25,3 +25,55 @@ export interface IPackage {
   };
   [key: string]: unknown;
 }
+
+export interface IEpgResponse {
+  startEpoch: number;
+  endEpoch: number;
+  channel_id: string;
+  srno: string;
+  showname: string;
+  description: string;
+  showCategory: string;
+  episodePoster: string;
+  episode_num: number;
+  director?: string;
+  starCast?: string;
+  episode_desc?: string;
+}
+
+export interface IChannel {
+  '@id': string;
+  'display-name': string;
+  icon: {
+    '@src': string;
+  };
+}
+
+export interface IProgramme {
+  '@start': string;
+  '@stop': string;
+  '@channel': string;
+  '@catchup-id': string;
+  title: string;
+  desc: string;
+  category: string;
+  icon: {
+    '@src': string;
+  };
+  'episode-num'?: {
+    '@system': string;
+    '#text': string;
+  };
+  credits?: {
+    director?: string;
+    actor?: string[];
+  };
+  'sub-title'?: string;
+}
+
+export interface IEpg {
+  tv: {
+    channel: IChannel[];
+    programme: IProgramme[];
+  };
+}
