@@ -5,6 +5,7 @@ import { argv } from 'process';
 import ejs from 'ejs';
 import http from 'http';
 import https from 'https';
+import chalk from 'chalk';
 import { API_EPG_URL } from './config';
 import { IChannel, IEpgResponse, IPackage, IProgramme } from './types';
 
@@ -15,12 +16,14 @@ try {
   const packageJsonContent = fs.readFileSync('./package.json', 'utf-8');
   const packageJson: IPackage = JSON.parse(packageJsonContent);
   appVersion = packageJson.version;
-  if (packageJson.description) appDescription = packageJson.description;
+  if (packageJson.description) {
+    appDescription = packageJson.description;
+  }
 } catch (error) {
   /* empty */
 }
 
-console.log(figlet.textSync('JTVEpgGen'));
+console.log(chalk.bgGreenBright.whiteBright(figlet.textSync('JTVEpgGen')));
 
 const program = new Command();
 program
