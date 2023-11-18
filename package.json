@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/rrjanbiah/JTVEpgGen#readme",
   "dependencies": {
-    "chalk": "^5.3.0",
     "commander": "^11.1.0",
     "ejs": "^3.1.9",
     "figlet": "^1.7.0"
