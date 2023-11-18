@@ -1,11 +1,11 @@
-import fs from 'fs';
-import figlet from 'figlet';
+import * as fs from 'fs';
+import * as figlet from 'figlet';
 import { Command } from 'commander';
 import { argv } from 'process';
-import ejs from 'ejs';
-import http from 'http';
-import https from 'https';
-import chalk from 'chalk';
+import * as ejs from 'ejs';
+import * as http from 'http';
+import * as https from 'https';
+// import chalk from 'chalk';
 import { API_EPG_URL } from './config';
 import { IChannel, IEpgResponse, IPackage, IProgramme } from './types';
 
@@ -23,7 +23,7 @@ try {
   /* empty */
 }
 
-console.log(chalk.bgGreenBright.whiteBright(figlet.textSync('JTVEpgGen')));
+console.log(/* chalk.bgGreenBright.whiteBright */ figlet.textSync('JTVEpgGen'));
 
 const program = new Command();
 program

@@ -2,10 +2,11 @@
   "name": "jtvepggen",
   "version": "0.0.1",
   "description": "JTVEpgGen is a command-line application that generates epg.xml.gz from J TV API",
-  "main": "index.ts",
+  "main": "./index.ts",
+  "bin": "./dist/index.js",
   "scripts": {
     "start": "npx -y tsx index.ts",
-    "build": "npx pkg -t linux,macos,win . --out-path dist",
+    "build": "npx -y tsc && npx -y pkg .",
     "test": "jest",
     "lint": "eslint . --ext .js,.ts"
   },
@@ -45,5 +46,19 @@
     "jest": "^29.7.0",
     "prettier": "^3.1.0",
     "ts-jest": "^29.1.1"
+  },
+  "pkg": {
+    "scripts": [],
+    "assets": [
+      "./node_modules/figlet/fonts/Standard.flf"
+    ],
+    "targets": [
+      "node18-linux-x64"
+    ],
+    "//": [
+      "node18-macos-x64",
+      "node18-win-x86"
+    ],
+    "outputPath": "./dist"
   }
 }
