@@ -6,7 +6,7 @@
   "bin": "./dist/index.js",
   "scripts": {
     "start": "npx -y tsx index.ts",
-    "build": "npx -y tsc && npx -y pkg .",
+    "build": "npx -y tsc && npx -y pkg . --compress GZip",
     "test": "jest",
     "lint": "eslint . --ext .js,.ts"
   },
