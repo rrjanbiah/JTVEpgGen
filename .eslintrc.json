@@ -13,7 +13,7 @@
     ],
     "no-console": "off",
     "prettier/prettier": "error",
-    "curly": "error"
+    "curly": ["error", "all"]
   },
   "settings": {
     "import/resolver": {
