@@ -13,7 +13,7 @@ JTVEpgGen is a command-line application that generates `epg.xml.gz` from J TV AP
                            |_|    |___/
 https://github.com/rrjanbiah/JTVEpgGen#readme
 
-Usage: index [options]
+Usage: jtvepggen [options]
 
 JTVEpgGen is a command-line application that generates epg.xml.gz from J TV API
 
