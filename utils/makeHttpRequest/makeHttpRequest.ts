@@ -15,6 +15,7 @@ const makeHttpRequest = async (
   };
 
   if (options.data) {
+    // @ts-expect-error - TODO
     defaultOptions.body = JSON.stringify(options.data);
   }
 
@@ -24,6 +25,7 @@ const makeHttpRequest = async (
 
     const result: IApiResponse = {
       statusCode: response.status,
+      // @ts-expect-error - TODO
       headers: Object.fromEntries(response.headers.entries()),
       body: await response.text()
     };

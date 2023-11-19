@@ -49,13 +49,15 @@ const delayUnit: number = +options.delayUnit || 100;
         delayUnit
       );
 
+      const programTemplatePath: string = path.join(__dirname, 'templates', 'partial.program.ejs');
       const compiledAsyncProgramTemplate = ejs.compile(
-        fs.readFileSync('./templates/partial.program.ejs', 'utf8'),
+        fs.readFileSync(programTemplatePath, 'utf8'),
         { async: true }
       );
 
+      const channelTemplatePath: string = path.join(__dirname, 'templates', 'partial.channel.ejs');
       const channelsXml: string = await ejs.render(
-        fs.readFileSync('./templates/partial.channel.ejs', 'utf8'),
+        fs.readFileSync(channelTemplatePath, 'utf8'),
         { channels },
         { async: true }
       );
@@ -82,14 +84,15 @@ const delayUnit: number = +options.delayUnit || 100;
         }
       }
 
+      const epgXmlTemplatePath: string = path.join(__dirname, 'templates', 'epg.xml.ejs');
       const epgXml: string = await ejs.render(
-        fs.readFileSync('./templates/epg.xml.ejs', 'utf8'),
+        fs.readFileSync(epgXmlTemplatePath, 'utf8'),
         { channelsXml, programsXml },
         { async: true }
       );
 
       const epgXmlGzPath: string = './dist/epg.xml.gz';
-      // if path not exists...
+      // if path does not exist...
       const dir = path.dirname(epgXmlGzPath);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });

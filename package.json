@@ -6,7 +6,7 @@
   "bin": "./dist/index.js",
   "scripts": {
     "start": "npx -y tsx index.ts",
-    "build": "npx -y tsc && npx -y pkg . --compress GZip",
+    "build": "npx -y tsc && cp -r ./templates ./dist/ && npx -y pkg . --compress GZip",
     "test": "jest",
     "lint": "eslint . --ext .js,.ts"
   },
@@ -51,7 +51,8 @@
   "pkg": {
     "scripts": [],
     "assets": [
-      "./node_modules/figlet/fonts/Standard.flf"
+      "./node_modules/figlet/fonts/Standard.flf",
+      "./dist/templates/**/*"
     ],
     "targets": [
       "node18-linux-x64"
