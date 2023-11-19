@@ -1,0 +1,29 @@
+<% for (const program of epgs) { %>
+    <programme start="<%- program.startEpoch %>" stop="<%- program.endEpoch %>" channel="<%- program.channel_id %>"
+        catchup-id="<%- program.srno %>">
+        <title><%- program.showname %></title>
+        <desc><%- program.description %></desc>
+        <% if (program.showCategory) { %>
+            <category><%- program.showCategory %></category>
+            <% } %>
+                <icon src="<%- IMG_PATH %>shows/<%- program.episodePoster %>"></icon>
+                <% if (program.episode_num> -1) { %>
+                    <episode-num system="xmltv_ns">0.<%- program.episode_num %></episode-num>
+                    <% } %>
+                        <% if (program.director || program.starCast) { %>
+                            <credits>
+                                <% if (program.director) { %>
+                                    <director><%- program.director %></director>
+                                    <% } %>
+                                        <% if (program.starCast) { %>
+                                            <% for (actor of program.starCast.split(', ')) { %>
+                                        <actor><%- actor %></actor>
+                                    <% } %>
+                                <% } %>
+                            </credits>
+                        <% } %>
+                    <% if (program.episode_desc) { %>
+                    <sub-title><%- program.episode_desc %></sub-title>
+                    <% } %>
+    </programme>
+<% } %>

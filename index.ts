@@ -1,87 +1,96 @@
 import * as fs from 'fs';
+import * as zlib from 'zlib';
 import * as figlet from 'figlet';
 import { Command } from 'commander';
-import { argv } from 'process';
 import * as ejs from 'ejs';
-import * as http from 'http';
-import * as https from 'https';
-import { API_EPG_URL } from './config';
-import { IChannel, IEpgResponse, IPackage, IProgramme } from './types';
 
-let appVersion: string = '0.0.1';
-let appDescription: string = argv[0];
-
-try {
-  const packageJsonContent = fs.readFileSync('./package.json', 'utf-8');
-  const packageJson: IPackage = JSON.parse(packageJsonContent);
-  appVersion = packageJson.version;
-  if (packageJson.description) {
-    appDescription = packageJson.description;
-  }
-} catch (error) {
-  /* empty */
-}
+import path = require('path');
+import getChannels from './services/channels/getChannels';
+import { IChannel } from './services/channels/types';
+import { IEpg, IEpgResponse } from './services/channels/epg/types';
+import getEpg from './services/channels/epg/getEpg';
+import getRandomInt from './utils/math/random';
+import delay from './utils/process/delay';
+import { IMG_PATH } from './config/config';
+import parsePackageJson from './utils/packageJson/packageJson';
 
 console.log(figlet.textSync('JTVEpgGen'));
 
 const program = new Command();
+const { appVersion, appDescription } = parsePackageJson();
 program
   .version(appVersion)
   .description(appDescription)
-  .option('-d, --days  [value]', 'Number of days')
-  .option('-v, --verbose  [value]', 'Verbose level')
+  .option('-s, --startDayOffset  [value]', 'Start day offset between -7 and 7')
+  .option('-e, --endDayOffset  [value]', 'End day offset between -7 and 7')
   .parse(process.argv);
 
 const options = program.opts();
 
-console.log('options', options);
+const startDayOffset: number = +options.startDayOffset || 0;
+const endDayOffset: number = +options.endDayOffset || 0;
 
-const channel: IChannel[] = [];
-const programme: IProgramme[] = [];
+(async () => {
+  getChannels().then(async (response) => {
+    if ('result' in response) {
+      const channels: IChannel[] = response.result;
+      console.log(
+        'Total Channels',
+        channels.length,
+        'startDayOffset',
+        startDayOffset,
+        'endDayOffset',
+        endDayOffset
+      );
 
-function fetchEpg(url: string): Promise<IEpgResponse> {
-  const protocol = url.startsWith('https://') ? https : http;
+      const compiledAsyncProgramTemplate = ejs.compile(
+        fs.readFileSync('./templates/partial.program.ejs', 'utf8'),
+        { async: true }
+      );
 
-  return new Promise((resolve, reject) => {
-    const request = protocol.get(url, (response) => {
-      let data = '';
+      const channelsXml: string = await ejs.render(
+        fs.readFileSync('./templates/partial.channel.ejs', 'utf8'),
+        { channels },
+        { async: true }
+      );
 
-      response.on('data', (chunk) => {
-        data += chunk;
-      });
-
-      response.on('end', () => {
-        try {
-          // console.debug('data', data);
-          const jsonData: IEpgResponse = JSON.parse(data);
-          resolve(jsonData);
-        } catch (parseError) {
-          reject(new Error('Failed to parse JSON response.'));
+      let programsXml: string = '';
+      // eslint-disable-next-line no-restricted-syntax -- As forEach can't be used in async
+      for await (const channel of channels) {
+        if (channel.isCatchupAvailable) {
+          for (let dayOffset = startDayOffset; dayOffset <= endDayOffset; dayOffset += 1) {
+            try {
+              const randDelay: number = getRandomInt(1, 7);
+              // eslint-disable-next-line no-await-in-loop -- Intentional
+              await delay(randDelay);
+              // eslint-disable-next-line no-await-in-loop -- Intentional
+              const resp = await getEpg(channel.channel_id, dayOffset);
+              const epgResponse: IEpgResponse = resp;
+              const epgs: IEpg[] = epgResponse.epg;
+              // eslint-disable-next-line no-await-in-loop -- Intentional
+              programsXml += await compiledAsyncProgramTemplate({ epgs, IMG_PATH });
+            } catch (error) {
+              console.log('Error: ', (error as Error).message, 'Channel ID', channel.channel_id);
+            }
+          }
         }
-      });
-    });
+      }
 
-    request.on('error', (error) => {
-      reject(new Error(`Failed to fetch data: ${(error as Error).message}`));
-    });
+      const epgXml: string = await ejs.render(
+        fs.readFileSync('./templates/epg.xml.ejs', 'utf8'),
+        { channelsXml, programsXml },
+        { async: true }
+      );
 
-    request.end();
-  });
-}
-
-if (options.days) {
-  const numDays: number = +options.days;
-  (async () => {
-    try {
-      const url = API_EPG_URL;
-      const jsonData = await fetchEpg(url);
-      const templateContent = fs.readFileSync('./template.ejs', 'utf8');
-      const epgXml = ejs.render(templateContent, jsonData);
-
-      fs.writeFileSync('EPG.xml', epgXml);
-      console.log('Conversion successful. EPG.xml created.');
-    } catch (error) {
-      console.error('Error:', (error as Error).message);
+      const epgXmlGzPath: string = './dist/epg.xml.gz';
+      // if path not exists...
+      const dir = path.dirname(epgXmlGzPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      const epgXmlWithoutEmptyNewline: string = epgXml.replace(/^\s*[\r\n]/gm, '');
+      fs.writeFileSync(epgXmlGzPath, zlib.gzipSync(epgXmlWithoutEmptyNewline));
+      console.log(`${epgXmlGzPath} created.`);
     }
-  })();
-}
+  });
+})();

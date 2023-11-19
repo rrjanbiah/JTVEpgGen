@@ -13,7 +13,9 @@
     ],
     "no-console": "off",
     "prettier/prettier": "error",
-    "curly": ["error", "all"]
+    "curly": ["error", "all"],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"]
   },
   "settings": {
     "import/resolver": {

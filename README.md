@@ -16,16 +16,17 @@ Usage: index [options]
 JTVEpgGen is a command-line application that generates epg.xml.gz from J TV API
 
 Options:
-  -V, --version           output the version number
-  -d, --days  [value]     Number of days
-  -v, --verbose  [value]  Verbose level
-  -h, --help              display help for command
+  -V, --version                  output the version number
+  -s, --startDayOffset  [value]  Start day offset between -7 and 7
+  -e, --endDayOffset  [value]    End day offset between -7 and 7
+  -h, --help                     display help for command
 ```
 
 ## Tech Stack
 
 - Node
 - Commander
+- EJS - for templating
 - pkg - for executable
 - Jest
 - ESLint
@@ -37,5 +38,7 @@ Options:
 
 ## TODO
 
-- [ ] get channels
-- [ ] gzip
+- [x] get channels
+- [x] gzip
+- [ ] Test cases
+- [ ] move inside `src` (?)
