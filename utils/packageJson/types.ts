@@ -29,4 +29,5 @@ export interface IPackage {
 export interface IPackageInfo {
   appVersion: string;
   appDescription: string;
+  appHomepage: string;
 }

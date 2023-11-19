@@ -11,6 +11,8 @@ JTVEpgGen is a command-line application that generates `epg.xml.gz` from J TV AP
  | |_| | | |   \ V / | |___| |_) | (_| | |_| |  __/ | | |
   \___/  |_|    \_/  |_____| .__/ \__, |\____|\___|_| |_|
                            |_|    |___/
+https://github.com/rrjanbiah/JTVEpgGen#readme
+
 Usage: index [options]
 
 JTVEpgGen is a command-line application that generates epg.xml.gz from J TV API
@@ -19,6 +21,7 @@ Options:
   -V, --version                  output the version number
   -s, --startDayOffset  [value]  Start day offset between -7 and 7
   -e, --endDayOffset  [value]    End day offset between -7 and 7
+  -d, --delayUnit  [value]       Delay unit; 1 means milli second
   -h, --help                     display help for command
 ```
 

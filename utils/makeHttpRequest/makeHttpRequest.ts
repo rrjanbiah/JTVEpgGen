@@ -1,3 +1,4 @@
+import { USER_AGENT } from '../../config/config';
 import { IApiResponse, IRequestOptions } from './types';
 
 const makeHttpRequest = async (
@@ -7,7 +8,8 @@ const makeHttpRequest = async (
   const defaultOptions = {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-Agent': USER_AGENT
     },
     ...options
   };

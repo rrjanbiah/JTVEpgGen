@@ -14,21 +14,25 @@ import delay from './utils/process/delay';
 import { IMG_PATH } from './config/config';
 import parsePackageJson from './utils/packageJson/packageJson';
 
+const { appVersion, appDescription, appHomepage } = parsePackageJson();
+
 console.log(figlet.textSync('JTVEpgGen'));
+console.log(appHomepage, '\n');
 
 const program = new Command();
-const { appVersion, appDescription } = parsePackageJson();
 program
   .version(appVersion)
   .description(appDescription)
   .option('-s, --startDayOffset  [value]', 'Start day offset between -7 and 7')
   .option('-e, --endDayOffset  [value]', 'End day offset between -7 and 7')
+  .option('-d, --delayUnit  [value]', 'Delay unit; 1 means milli second')
   .parse(process.argv);
 
 const options = program.opts();
 
 const startDayOffset: number = +options.startDayOffset || 0;
 const endDayOffset: number = +options.endDayOffset || 0;
+const delayUnit: number = +options.delayUnit || 100;
 
 (async () => {
   getChannels().then(async (response) => {
@@ -40,7 +44,9 @@ const endDayOffset: number = +options.endDayOffset || 0;
         'startDayOffset',
         startDayOffset,
         'endDayOffset',
-        endDayOffset
+        endDayOffset,
+        'delayUnit',
+        delayUnit
       );
 
       const compiledAsyncProgramTemplate = ejs.compile(
@@ -60,7 +66,7 @@ const endDayOffset: number = +options.endDayOffset || 0;
         if (channel.isCatchupAvailable) {
           for (let dayOffset = startDayOffset; dayOffset <= endDayOffset; dayOffset += 1) {
             try {
-              const randDelay: number = getRandomInt(1, 7);
+              const randDelay: number = getRandomInt(1, 7) * delayUnit;
               // eslint-disable-next-line no-await-in-loop -- Intentional
               await delay(randDelay);
               // eslint-disable-next-line no-await-in-loop -- Intentional

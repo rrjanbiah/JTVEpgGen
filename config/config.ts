@@ -10,3 +10,5 @@ export const API_ENDPOINTS: Record<string, TApiEndpoint> = {
 };
 
 export const IMG_PATH = 'http://jiotv.catchup.cdn.jio.com/dare_images/';
+
+export const USER_AGENT = 'okhttp/4.2.2';
