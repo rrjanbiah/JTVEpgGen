@@ -23,9 +23,9 @@ const program = new Command();
 program
   .version(appVersion)
   .description(appDescription)
-  .option('-s, --startDayOffset  [value]', 'Start day offset between -7 and 7')
-  .option('-e, --endDayOffset  [value]', 'End day offset between -7 and 7')
-  .option('-d, --delayUnit  [value]', 'Delay unit; 1 means milli second')
+  .option('-s, --startDayOffset  [value]', 'Start day offset between -7 and 7. Default 0.')
+  .option('-e, --endDayOffset  [value]', 'End day offset between -7 and 7. Default 0.')
+  .option('-d, --delayUnit  [value]', 'Delay unit; 1 means milli second. Default 100.')
   .parse(process.argv);
 
 const options = program.opts();
@@ -58,28 +58,26 @@ const delayUnit: number = +options.delayUnit || 100;
       const channelTemplatePath: string = path.join(__dirname, 'templates', 'partial.channel.ejs');
       const channelsXml: string = await ejs.render(
         fs.readFileSync(channelTemplatePath, 'utf8'),
-        { channels },
+        { channels, IMG_PATH },
         { async: true }
       );
 
       let programsXml: string = '';
       // eslint-disable-next-line no-restricted-syntax -- As forEach can't be used in async
       for await (const channel of channels) {
-        if (channel.isCatchupAvailable) {
-          for (let dayOffset = startDayOffset; dayOffset <= endDayOffset; dayOffset += 1) {
-            try {
-              const randDelay: number = getRandomInt(1, 7) * delayUnit;
-              // eslint-disable-next-line no-await-in-loop -- Intentional
-              await delay(randDelay);
-              // eslint-disable-next-line no-await-in-loop -- Intentional
-              const resp = await getEpg(channel.channel_id, dayOffset);
-              const epgResponse: IEpgResponse = resp;
-              const epgs: IEpg[] = epgResponse.epg;
-              // eslint-disable-next-line no-await-in-loop -- Intentional
-              programsXml += await compiledAsyncProgramTemplate({ epgs, IMG_PATH });
-            } catch (error) {
-              console.log('Error: ', (error as Error).message, 'Channel ID', channel.channel_id);
-            }
+        for (let dayOffset = startDayOffset; dayOffset <= endDayOffset; dayOffset += 1) {
+          try {
+            const randDelay: number = getRandomInt(1, 7) * delayUnit;
+            // eslint-disable-next-line no-await-in-loop -- Intentional
+            await delay(randDelay);
+            // eslint-disable-next-line no-await-in-loop -- Intentional
+            const resp = await getEpg(channel.channel_id, dayOffset);
+            const epgResponse: IEpgResponse = resp;
+            const epgs: IEpg[] = epgResponse.epg;
+            // eslint-disable-next-line no-await-in-loop -- Intentional
+            programsXml += await compiledAsyncProgramTemplate({ epgs, IMG_PATH });
+          } catch (error) {
+            console.log('Error: ', (error as Error).message, 'Channel ID', channel.channel_id);
           }
         }
       }
