@@ -1,6 +1,6 @@
 {
   "name": "jtvepggen",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "JTVEpgGen is a command-line application that generates epg.xml.gz from J TV API",
   "main": "./index.ts",
   "bin": "./dist/index.js",
