@@ -1,6 +1,6 @@
 <% for (const channel of channels) { %>
     <channel id="<%- channel.channel_id %>">
         <display-name><%- channel.channel_name %></display-name>
-        <icon src="http://jiotv.catchup.cdn.jio.com/dare_images/images/History_HD.png"></icon>
+        <icon src="<%- IMG_PATH %>images/<%- channel.logoUrl %>"></icon>
     </channel>
     <% } %>
