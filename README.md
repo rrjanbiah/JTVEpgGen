@@ -27,6 +27,7 @@ Options:
 
 ## Tech Stack
 
+- TypeScript
 - Node
 - Commander
 - EJS - for templating
