@@ -25,7 +25,7 @@
   "homepage": "https://github.com/rrjanbiah/JTVEpgGen#readme",
   "dependencies": {
     "commander": "^11.1.0",
-    "ejs": "^3.1.9",
+    "ejs": "^3.1.10",
     "figlet": "^1.7.0",
     "node-fetch": "^3.3.2"
   },
